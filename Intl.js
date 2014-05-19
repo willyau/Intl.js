@@ -333,6 +333,60 @@ var
     expExtSequences = RegExp('-'+extension, 'ig');
 })();
 
+/**
+ * Generates a function that will save the state of the RegExp function before
+ * executing the passed argument, restoring afterwards or on failure.
+ */
+function createNoTaintFn(fn) {
+    // Returning a function with one arg (read: fn.length = 1) lets us cheat
+    // some tests without resorting to new Function()
+    return function (a) {
+        var restore = createRegExpRestore();
+
+        // Restore regardless of the function's success
+        try {
+            return fn.apply(this, arguments);
+        }
+        finally {
+            restore.exp.test(restore.input);
+        }
+    };
+}
+
+/**
+ * A merge of the Intl.{Constructor}.supportedLocalesOf functions
+ * To make life easier, the function should be bound to the constructor's internal
+ * properties object.
+ */
+var supportedLocalesOf = createNoTaintFn(function(locales) {
+    /*jshint validthis:true */
+
+    // Bound functions only have the `this` value altered if being used as a constructor,
+    // this lets us imitate a native function that has no constructor
+    if (!hop.call(this, '[[availableLocales]]'))
+        throw new TypeError('supportedLocalesOf() is not a constructor');
+
+    var
+    // 1. If options is not provided, then let options be undefined.
+        options = arguments[1],
+
+    // 2. Let availableLocales be the value of the [[availableLocales]] internal
+    //    property of the standard built-in object that is the initial value of
+    //    Intl.NumberFormat.
+
+        availableLocales = this['[[availableLocales]]'],
+
+    // 3. Let requestedLocales be the result of calling the CanonicalizeLocaleList
+    //    abstract operation (defined in 9.2.1) with argument locales.
+        requestedLocales = CanonicalizeLocaleList(locales);
+
+    // 4. Return the result of calling the SupportedLocales abstract operation
+    //    (defined in 9.2.8) with arguments availableLocales, requestedLocales,
+    //    and options.
+    return SupportedLocales(availableLocales, requestedLocales, options);
+});
+
+
 // Sect 6.2 Language Tags
 // ======================
 
@@ -1097,9 +1151,8 @@ function NumberFormatConstructor () {
     var locales = arguments[0];
     var options = arguments[1];
 
-    if (!this || this === Intl) {
+    if (!this || this === Intl)
         return new Intl.NumberFormat(locales, options);
-    }
 
     return InitializeIntlObject(toObject(this), InitializeNumberFormat, locales, options);
 }
@@ -1421,11 +1474,8 @@ function GetFormatNumber() {
  * Number value), it returns a String value representing x according to the
  * effective locale and the formatting options of numberFormat.
  */
-function FormatNumber (numberFormat, x) {
+var FormatNumber = createNoTaintFn(function (numberFormat, x) {
     var n,
-
-    // Create an object whose props can be used to restore the values of RegExp props
-        regexpState = createRegExpRestore(),
 
         internal = getInternalProperties(numberFormat),
         locale = internal['[[dataLocale]]'],
@@ -1602,12 +1652,9 @@ function FormatNumber (numberFormat, x) {
         result = result.replace('{currency}', cd);
     }
 
-    // Restore the RegExp properties
-    regexpState.exp.test(regexpState.input);
-
     // 7. Return result.
     return result;
-}
+});
 
 /**
  * When the ToRawPrecision abstract operation is called with arguments x (which
@@ -1822,9 +1869,9 @@ function DateTimeFormatConstructor () {
     var locales = arguments[0];
     var options = arguments[1];
 
-    if (!this || this === Intl) {
+    if (!this || this === Intl)
         return new Intl.DateTimeFormat(locales, options);
-    }
+
     return InitializeIntlObject(toObject(this), InitializeDateTimeFormat, locales, options);
 }
 
@@ -2378,16 +2425,13 @@ function GetFormatDateTime() {
  * specified in ES5, 15.9.1.1) according to the effective locale and the formatting
  * options of dateTimeFormat.
  */
-function FormatDateTime(dateTimeFormat, x) {
+var FormatDateTime = createNoTaintFn(function (dateTimeFormat, x) {
     // 1. If x is not a finite Number, then throw a RangeError exception.
     if (!isFinite(x))
         throw new RangeError('Invalid valid date passed to format');
 
     var
         internal = dateTimeFormat.__getInternalProperties(secret),
-
-    // Creating restore point for properties on the RegExp object... please wait
-        regexpState = createRegExpRestore(),
 
     // 2. Let locale be the value of the [[locale]] internal property of dateTimeFormat.
         locale = internal['[[locale]]'],
@@ -2524,12 +2568,9 @@ function FormatDateTime(dateTimeFormat, x) {
         result = result.replace('{ampm}', fv);
     }
 
-    // Restore properties of the RegExp object
-    regexpState.exp.test(regexpState.input);
-
     // 9. Return result.
     return result;
-}
+});
 
 /**
  * When the ToLocalTime abstract operation is called with arguments date, calendar, and
@@ -2816,15 +2857,12 @@ function addLocaleData (data, tag) {
  * Performs universal actions for all Intl objects at early stages of construction
  * Numbered comments are from the spec
  */
-function InitializeIntlObject (thisObj, initFn, locales, options) {
+var InitializeIntlObject = createNoTaintFn(function (thisObj, initFn, locales, options) {
     var
         requestedLocales,
 
     // This will be a internal properties object if we're not already initialized
-        internal = getInternalProperties(thisObj),
-
-    // Snapshot the state of the RegExp constructor for restoration later
-        regexpState = createRegExpRestore();
+        internal = getInternalProperties(thisObj);
 
     // 1.  If dateTimeFormat has an [[initializedIntlObject]] internal property with
     //     value true, throw a TypeError exception.
@@ -2850,12 +2888,9 @@ function InitializeIntlObject (thisObj, initFn, locales, options) {
     // Call the specified initialiser
     initFn(thisObj, requestedLocales, options, internal);
 
-    // Restore the RegExp properties
-    regexpState.exp.test(regexpState.input);
-
     // Return the initialised object
     return thisObj;
-}
+});
 
 /**
  * A function to deal with the inaccuracy of calculating log10 in pre-ES6
@@ -2869,45 +2904,6 @@ function log10Floor (n) {
 
     var x = Math.round(Math.log(n) * Math.LOG10E);
     return x - (Number('1e' + x) > n);
-}
-
-/**
- * A merge of the Intl.{Constructor}.supportedLocalesOf functions
- * To make life easier, the function should be bound to the constructor's internal
- * properties object.
- */
-function supportedLocalesOf(locales) {
-    /*jshint validthis:true */
-
-    // Bound functions only have the `this` value altered if being used as a constructor,
-    // this lets us imitate a native function that has no constructor
-    if (!hop.call(this, '[[availableLocales]]'))
-        throw new TypeError('supportedLocalesOf() is not a constructor');
-
-    var
-    // Create an object whose props can be used to restore the values of RegExp props
-        regexpState = createRegExpRestore(),
-
-    // 1. If options is not provided, then let options be undefined.
-        options = arguments[1],
-
-    // 2. Let availableLocales be the value of the [[availableLocales]] internal
-    //    property of the standard built-in object that is the initial value of
-    //    Intl.NumberFormat.
-
-        availableLocales = this['[[availableLocales]]'],
-
-    // 3. Let requestedLocales be the result of calling the CanonicalizeLocaleList
-    //    abstract operation (defined in 9.2.1) with argument locales.
-        requestedLocales = CanonicalizeLocaleList(locales);
-
-    // Restore the RegExp properties
-    regexpState.exp.test(regexpState.input);
-
-    // 4. Return the result of calling the SupportedLocales abstract operation
-    //    (defined in 9.2.8) with arguments availableLocales, requestedLocales,
-    //    and options.
-    return SupportedLocales(availableLocales, requestedLocales, options);
 }
 
 /**
