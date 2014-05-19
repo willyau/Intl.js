@@ -1101,7 +1101,7 @@ function NumberFormatConstructor () {
         return new Intl.NumberFormat(locales, options);
     }
 
-    return InitializeNumberFormat(toObject(this), locales, options);
+    return InitializeIntlObject(toObject(this), InitializeNumberFormat, locales, options);
 }
 
 defineProperty(Intl, 'NumberFormat', {
@@ -1119,37 +1119,10 @@ defineProperty(Intl.NumberFormat, 'prototype', {
  * The abstract operation InitializeNumberFormat accepts the arguments
  * numberFormat (which must be an object), locales, and options. It initializes
  * numberFormat as a NumberFormat object.
+ *
+ * InitializeIntlObject() takes care of parts 1-3, including canonicalizing locales
  */
-function /*11.1.1.1 */InitializeNumberFormat (numberFormat, locales, options) {
-    var
-    // This will be a internal properties object if we're not already initialized
-        internal = getInternalProperties(numberFormat),
-
-    // Create an object whose props can be used to restore the values of RegExp props
-        regexpState = createRegExpRestore();
-
-    // 1. If numberFormat has an [[initializedIntlObject]] internal property with
-    // value true, throw a TypeError exception.
-    if (internal['[[initializedIntlObject]]'] === true)
-        throw new TypeError('`this` object has already been initialized as an Intl object');
-
-    // Need this to access the `internal` object
-    defineProperty(numberFormat, '__getInternalProperties', {
-        value: function () {
-            // NOTE: Non-standard, for internal use only
-            if (arguments[0] === secret)
-                return internal;
-        }
-    });
-
-    // 2. Set the [[initializedIntlObject]] internal property of numberFormat to true.
-    internal['[[initializedIntlObject]]'] = true;
-
-    var
-    // 3. Let requestedLocales be the result of calling the CanonicalizeLocaleList
-    //    abstract operation (defined in 9.2.1) with argument locales.
-        requestedLocales = CanonicalizeLocaleList(locales);
-
+function /*11.1.1.1 */InitializeNumberFormat (numberFormat, requestedLocales, options, internal) {
     // 4. If options is undefined, then
     if (options === undefined)
         // a. Let options be the result of creating a new object as if by the
@@ -1360,12 +1333,6 @@ function /*11.1.1.1 */InitializeNumberFormat (numberFormat, locales, options) {
     // In ES3, we need to pre-bind the format() function
     if (es3)
         numberFormat.format = GetFormatNumber.call(numberFormat);
-
-    // Restore the RegExp properties
-    regexpState.exp.test(regexpState.input);
-
-    // Return the newly initialised object
-    return numberFormat;
 }
 
 function CurrencyDigits(currency) {
@@ -1858,7 +1825,7 @@ function DateTimeFormatConstructor () {
     if (!this || this === Intl) {
         return new Intl.DateTimeFormat(locales, options);
     }
-    return InitializeDateTimeFormat(toObject(this), locales, options);
+    return InitializeIntlObject(toObject(this), InitializeDateTimeFormat, locales, options);
 }
 
 defineProperty(Intl, 'DateTimeFormat', {
@@ -1876,37 +1843,11 @@ defineProperty(DateTimeFormatConstructor, 'prototype', {
  * The abstract operation InitializeDateTimeFormat accepts the arguments dateTimeFormat
  * (which must be an object), locales, and options. It initializes dateTimeFormat as a
  * DateTimeFormat object.
+ *
+ * InitializeIntlObject() takes care of parts 1-3, including canonicalizing locales
  */
-function/* 12.1.1.1 */InitializeDateTimeFormat (dateTimeFormat, locales, options) {
+function/* 12.1.1.1 */InitializeDateTimeFormat (dateTimeFormat, requestedLocales, options, internal) {
     var
-    // This will be a internal properties object if we're not already initialized
-        internal = getInternalProperties(dateTimeFormat),
-
-    // Create an object whose props can be used to restore the values of RegExp props
-        regexpState = createRegExpRestore();
-
-    // 1. If dateTimeFormat has an [[initializedIntlObject]] internal property with
-    //    value true, throw a TypeError exception.
-    if (internal['[[initializedIntlObject]]'] === true)
-        throw new TypeError('`this` object has already been initialized as an Intl object');
-
-    // Need this to access the `internal` object
-    defineProperty(dateTimeFormat, '__getInternalProperties', {
-        value: function () {
-            // NOTE: Non-standard, for internal use only
-            if (arguments[0] === secret)
-                return internal;
-        }
-    });
-
-    // 2. Set the [[initializedIntlObject]] internal property of numberFormat to true.
-    internal['[[initializedIntlObject]]'] = true;
-
-    var
-    // 3. Let requestedLocales be the result of calling the CanonicalizeLocaleList
-    //    abstract operation (defined in 9.2.1) with argument locales.
-        requestedLocales = CanonicalizeLocaleList(locales),
-
     // 4. Let options be the result of calling the ToDateTimeOptions abstract
     //    operation (defined below) with arguments options, "any", and "date".
         options = ToDateTimeOptions(options, 'any', 'date'),
@@ -2105,12 +2046,6 @@ function/* 12.1.1.1 */InitializeDateTimeFormat (dateTimeFormat, locales, options
     // In ES3, we need to pre-bind the format() function
     if (es3)
         dateTimeFormat.format = GetFormatDateTime.call(dateTimeFormat);
-
-    // Restore the RegExp properties
-    regexpState.exp.test(regexpState.input);
-
-    // Return the newly initialised object
-    return dateTimeFormat;
 }
 
 /**
@@ -2863,19 +2798,64 @@ function addLocaleData (data, tag) {
 
     // 11.3 (the NumberFormat prototype object is an Intl.NumberFormat instance)
     if (!numberFormatProtoInitialised) {
-        InitializeNumberFormat(Intl.NumberFormat.prototype);
+        InitializeIntlObject(Intl.NumberFormat.prototype, InitializeNumberFormat);
         numberFormatProtoInitialised = true;
     }
 
     // 11.3 (the NumberFormat prototype object is an Intl.NumberFormat instance)
     if (data.date && !dateTimeFormatProtoInitialised) {
-        InitializeDateTimeFormat(Intl.DateTimeFormat.prototype);
+        InitializeIntlObject(Intl.DateTimeFormat.prototype, InitializeDateTimeFormat);
         dateTimeFormatProtoInitialised = true;
     }
 }
 
 // Helper functions
 // ================
+
+/**
+ * Performs universal actions for all Intl objects at early stages of construction
+ * Numbered comments are from the spec
+ */
+function InitializeIntlObject (thisObj, initFn, locales, options) {
+    var
+        requestedLocales,
+
+    // This will be a internal properties object if we're not already initialized
+        internal = getInternalProperties(thisObj),
+
+    // Snapshot the state of the RegExp constructor for restoration later
+        regexpState = createRegExpRestore();
+
+    // 1.  If dateTimeFormat has an [[initializedIntlObject]] internal property with
+    //     value true, throw a TypeError exception.
+    if (internal['[[initializedIntlObject]]'] === true)
+        throw new TypeError('`this` object has already been initialized as an Intl object');
+
+    // For internal use only.  Expose a method for other functions to access
+    // internal properties without tracking every constructed object.
+    defineProperty(thisObj, '__getInternalProperties', {
+        value: function () {
+            if (arguments[0] === secret)
+                return internal;
+        }
+    });
+
+    // 2. Set the [[initializedIntlObject]] internal property of numberFormat to true.
+    internal['[[initializedIntlObject]]'] = true;
+
+    // 3. Let requestedLocales be the result of calling the CanonicalizeLocaleList
+    //    abstract operation (defined in 9.2.1) with argument locales.
+    requestedLocales = CanonicalizeLocaleList(locales);
+
+    // Call the specified initialiser
+    initFn(thisObj, requestedLocales, options, internal);
+
+    // Restore the RegExp properties
+    regexpState.exp.test(regexpState.input);
+
+    // Return the initialised object
+    return thisObj;
+}
 
 /**
  * A function to deal with the inaccuracy of calculating log10 in pre-ES6
