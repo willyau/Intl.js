@@ -129,6 +129,9 @@ var
     numberFormatProtoInitialised = false,
     dateTimeFormatProtoInitialised = false,
 
+    // Save RegExp restorer "globally"
+    regExpRestore,
+
     // Some regular expressions we're using
     expCurrencyCode = /^[A-Z]{3}$/,
     expUnicodeExSeq = /-u(?:-[0-9a-z]{2,8})+/gi, // See `extension` below
@@ -341,14 +344,19 @@ function createNoTaintFn(fn) {
     // Returning a function with one arg (read: fn.length = 1) lets us cheat
     // some tests without resorting to new Function()
     return function (a) {
-        var restore = createRegExpRestore();
+        // If the state has already been saved, skip to fn call
+        if (regExpRestore)
+            return fn.apply(this, arguments);
+
+        regExpRestore = createRegExpRestore();
 
         // Restore regardless of the function's success
         try {
             return fn.apply(this, arguments);
         }
         finally {
-            restore.exp.test(restore.input);
+            regExpRestore.exp.test(regExpRestore.input);
+            regExpRestore = undefined;
         }
     };
 }
