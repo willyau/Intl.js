@@ -3,36 +3,43 @@
 var LIBS = {
         fs:     require('fs'),
         path:   require('path'),
-        vm:     require('vm')
+        spawn:  require('child_process').spawn
     },
-    LIB_PATH = __dirname + '/../Intl.complete.js',
-    INTL_LIB = LIBS.fs.readFileSync(LIB_PATH).toString(),
+    LIB_PATH = __dirname + '/../src/intl.js',
     TEST_DIR = __dirname + '/test262/pages';
 
 
 // returns Error if test threw one
-function runTest(testPath) {
-    var content,
-        context = LIBS.vm.createContext({});
+function runTest(testPath, cb) {
+    var test,
+        err = '',
+        content = 'var IntlPolyfill = require("' + LIB_PATH + '");\n';
 
-    content = LIBS.fs.readFileSync(LIBS.path.resolve(TEST_DIR, testPath)).toString();
-    LIBS.vm.runInContext(INTL_LIB, context, LIB_PATH);
+    content += LIBS.fs.readFileSync(LIBS.path.resolve(TEST_DIR, testPath)).toString();
+    content += '\nrunner();';
 
-    try {
-        LIBS.vm.runInContext(content, context, testPath);
-        return LIBS.vm.runInContext('runner()', context);
-    } catch (err) {
-        return err;
-    }
+    test = LIBS.spawn(process.execPath, process.execArgv.concat('-e', content));
+
+    test.stderr.on('data', function (data) {
+        err += data;
+    });
+
+    test.on('exit', function (c) {
+        err = (err.match(/^\w*Error:.*$/m) || [err]).pop();
+
+        cb(c ? err : undefined);
+    });
 }
-
 
 function listTests() {
     var tests = [],
         todo = [ '.' ],
+        stat,
         doing,
         path;
+
     while (todo.length) {
+        /*jshint loopfunc:true*/
         doing = todo.shift();
         path = LIBS.path.resolve(TEST_DIR, doing);
         stat = LIBS.fs.statSync(path);
@@ -54,24 +61,36 @@ function main() {
     var tests,
         passCount = 0,
         failCount = 0;
+
     tests = listTests();
     tests.sort();
-    tests.forEach(function(testPath) {
+
+    nextTest(tests.shift());
+
+    function nextTest(testPath) {
         var name,
             err;
-        name = LIBS.path.basename(testPath, LIBS.path.extname(testPath));
-        err = runTest(testPath);
 
-        if (err !== true) {
-            console.log(name, '-- FAILED', err.message);
+        name = LIBS.path.basename(testPath, LIBS.path.extname(testPath));
+        err = runTest(testPath, testComplete.bind(null, name));
+    }
+
+    function testComplete (name, err) {
+        if (err) {
+            console.log(name, '-- FAILED', err);
             failCount++;
         } else {
             console.log(name);
             passCount++;
         }
-    });
-    console.log('total ' + (tests.length) + ' -- passed ' + passCount + ' -- failed ' + failCount);
-    process.exit(failCount ? 1 : 0);
+
+        if (!tests.length) {
+            console.log('total ' + (tests.length) + ' -- passed ' + passCount + ' -- failed ' + failCount);
+            process.exit(failCount ? 1 : 0);
+        }
+        else
+            nextTest(tests.shift());
+    }
 }
 main();
 
