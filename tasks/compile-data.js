@@ -17,12 +17,13 @@ module.exports = function(grunt) {
             valCount = 0,
             objCount = 0,
 
-            fileData = '',
-            fs       = require('fs'),
-            locales  = fs.readdirSync('locale-data/json/'),
-            Intl     = String(fs.readFileSync('Intl.js'));
+            fileData = [
+                "var internals     = require('./vars/internals.js'),",
+                "    addLocaleData = require('./vars/addLocaleData.js'),\n"
+            ].join('\n'),
 
-        fileData += Intl.slice(0, Intl.lastIndexOf('return Intl;')) + '(function () {';
+            fs       = require('fs'),
+            locales  = fs.readdirSync('locale-data/json/');
 
         locales.forEach(function (file) {
             locData[file.slice(0, file.indexOf('.'))] = JSON.parse(fs.readFileSync('locale-data/json/' + file), reviver);
@@ -80,18 +81,17 @@ module.exports = function(grunt) {
                 return v;
         }
 
-        fileData += 'var a='+ JSON.stringify(prims) +',b=[];';
+        fileData += '    a = '+ JSON.stringify(prims, null, 4) +',\n    b = [];';
         objs.forEach(function (val, idx) {
-            var ref = JSON.stringify(val).replace(/"###(objs|prims)(\[[^#]+)###"/g, replacer);
+            var ref = JSON.stringify(val, null, 4).replace(/"###(objs|prims)(\[[^#]+)###"/g, replacer);
 
-            fileData += 'b['+ idx +']='+ ref +';';
+            fileData += 'b['+ idx +']='+ ref +';\n';
         });
 
         for (var k in locData)
-            fileData += 'addLocaleData('+ locData[k].replace(/###(objs|prims)(\[[^#]+)###/, replacer) +', "'+ k +'");';
+            fileData += 'addLocaleData('+ locData[k].replace(/###(objs|prims)(\[[^#]+)###/, replacer) +', "'+ k +'");\n';
 
-        fileData += '})();\n' + Intl.slice(Intl.lastIndexOf('return Intl;'));
-        fs.writeFileSync('Intl.complete.js', fileData);
+        fs.writeFileSync('./src/data.js', fileData);
 
         grunt.log.writeln('Total number of reused strings is ' + prims.length + ' (reduced from ' + valCount + ')');
         grunt.log.writeln('Total number of reused objects is ' + Object.keys(objStrs).length + ' (reduced from ' + objCount + ')');

@@ -24,6 +24,7 @@ var
 
 require('./numberformat.js');
 require('./datetimeformat.js');
+require('./data.js');
 
 /**
  * Can't really ship a single script with data for hundreds of locales, so we provide
