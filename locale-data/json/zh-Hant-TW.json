@@ -41,7 +41,7 @@
                 "year": "numeric",
                 "month": "numeric",
                 "day": "numeric",
-                "pattern": "{year}年{month}月{day}"
+                "pattern": "{year}年{month}月{day}日"
             },
             {
                 "year": "numeric",
@@ -57,12 +57,19 @@
             {
                 "year": "numeric",
                 "month": "numeric",
-                "pattern": "{year}年{month}"
+                "pattern": "{year}年{month}月"
             },
             {
-                "month": "numeric",
+                "month": "short",
                 "day": "numeric",
-                "pattern": "{month}月{day}"
+                "pattern": "{month}月{day}日"
+            },
+            {
+                "month": "short",
+                "day": "numeric",
+                "hour": "numeric",
+                "minute": "numeric",
+                "pattern": "{month}月{day}日 {ampm}{hour}:{minute}"
             },
             {
                 "month": "numeric",
@@ -325,22 +332,22 @@
                 },
                 "days": {
                     "narrow": [
-                        "周日",
-                        "周一",
-                        "周二",
-                        "周三",
-                        "周四",
-                        "周五",
-                        "周六"
+                        "週日",
+                        "週一",
+                        "週二",
+                        "週三",
+                        "週四",
+                        "週五",
+                        "週六"
                     ],
                     "short": [
-                        "周日",
-                        "周一",
-                        "周二",
-                        "周三",
-                        "周四",
-                        "周五",
-                        "周六"
+                        "週日",
+                        "週一",
+                        "週二",
+                        "週三",
+                        "週四",
+                        "週五",
+                        "週六"
                     ],
                     "long": [
                         "星期日",

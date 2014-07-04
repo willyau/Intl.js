@@ -36,13 +36,29 @@
                 "month": "short",
                 "day": "numeric",
                 "weekday": "short",
-                "pattern": "{year}년 {month} {day}일 ({weekday}"
+                "hour": "numeric",
+                "minute": "2-digit",
+                "pattern": "{year}년 {month} {day}일 ({weekday})  {hour}:{minute}",
+                "pattern12": "{year}년 {month} {day}일 ({weekday}) {ampm} {hour}:{minute}"
             },
             {
                 "year": "numeric",
                 "month": "short",
                 "day": "numeric",
-                "pattern": "{year}년 {month} {day}"
+                "weekday": "short",
+                "pattern": "{year}년 {month} {day}일 ({weekday})"
+            },
+            {
+                "year": "numeric",
+                "month": "short",
+                "day": "numeric",
+                "pattern": "{year}년 {month} {day}일"
+            },
+            {
+                "year": "numeric",
+                "month": "2-digit",
+                "day": "2-digit",
+                "pattern": "{year}년 {month}월 {day}일"
             },
             {
                 "year": "numeric",
@@ -63,7 +79,15 @@
             {
                 "month": "short",
                 "day": "numeric",
-                "pattern": "{month} {day}"
+                "pattern": "{month} {day}일"
+            },
+            {
+                "month": "short",
+                "day": "numeric",
+                "hour": "numeric",
+                "minute": "2-digit",
+                "pattern": "{month} {day}일 {hour}:{minute}",
+                "pattern12": "{month} {day}일 {ampm} {hour}:{minute}"
             },
             {
                 "month": "numeric",
