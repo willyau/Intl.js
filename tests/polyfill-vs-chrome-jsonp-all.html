@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+</head>
+
+<body>
+  	<script type="text/javascript">
+		var localesToTest = [
+			'ja-JP',
+			'de-DE',
+			'en-US',
+			'en-GB',
+			'es-ES',
+			'fi-FI',
+			'fr-FR',
+			'it-IT',
+			'ko-KR',
+			'nl-NL',
+			'pl-PL',
+			'pt-BR',
+			'ru-RU',
+			'sv-SE',
+			'tr-TR',
+			'zh-Hans-CN',
+			'zh-Hant-TW'
+		];
+
+		for (var i = localesToTest.length - 1; i >= 0; i--) {
+			var locale = localesToTest[i]
+
+			var iframe = document.createElement('iframe');
+			iframe.src = '../tests/polyfill-vs-chrome-jsonp-single-locale.html?locale=' + locale;
+			iframe.id = 'test-' + locale;
+			iframe.width = '100%';
+			iframe.height = '180';
+
+			var div = document.createElement('div');
+			div.appendChild(iframe);
+			div.style.cssText = 'display: inline-block; float: left; width: 48%; padding: 0px 10px; position:relative;';
+
+			var overlay = document.createElement('a');
+			overlay.style.cssText = 'width: 100%; height: 100%; background: transparent; position: absolute; top: 0; left: 0; cursor: pointer;';
+			overlay.href = '../tests/polyfill-vs-chrome-jsonp-single-locale.html?locale=' + locale;
+			div.appendChild(overlay);
+
+			document.getElementsByTagName('body')[0].appendChild(div);
+		}
+
+  	</script>
+
+</body>
+
+</html>
