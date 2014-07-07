@@ -1,3 +1,12 @@
+<<<<<<< HEAD
+=======
+if (typeof Intl === 'undefined') {
+	QUnit.test('testing for Intl API' + locale, function(assert) {
+		assert.ok(false, 'THIS TEST IS MEANT TO RUN IN A BROWSER THAT HAS THE INTL API.  (Try this in Chrome)');
+	});
+}
+
+>>>>>>> d0da3a3... added chrome conformation tests to see how the polyfil performs
 var dates = [
 	new Date(Date.UTC(2012, 11, 20, 3, 0, 0)),
 	new Date(Date.UTC(2014, 7, 4, 20, 0, 0))
@@ -56,9 +65,13 @@ for (var i = dates.length - 1; i >= 0; i--) {
 		var polyfillFmter = IntlPolyfill.DateTimeFormat(locale, format);
 		var intlPolyfill = polyfillFmter.format(date);
 
+<<<<<<< HEAD
 		if (typeof Intl !== 'undefined') {
 			var expectedEcmaScript402 = Intl.DateTimeFormat(locale, format).format(date);
 		}
+=======
+		var expectedEcmaScript402 = Intl.DateTimeFormat(locale, format).format(date);
+>>>>>>> d0da3a3... added chrome conformation tests to see how the polyfil performs
 
 		// replaces &nbsp; (non-breaking white space) - charcode 160
 		expectedEcmaScript402 = expectedEcmaScript402.replace(String.fromCharCode(160), ' ');
@@ -73,10 +86,17 @@ for (var i = dates.length - 1; i >= 0; i--) {
 		};
 
 		if (!whitelistException) {
+<<<<<<< HEAD
 			assert.equal(intlPolyfill, expectedEcmaScript402, 'polyfill is different than the browser\'s ecmascript: ' + formatName + ' - ' + intlPolyfill);
 		} else {
 			var expectedDate = whitelistException['expected' + i];
 			assert.equal(intlPolyfill, expectedDate, '!!!KNOWN TO BE DIFFERENT!!! polyfill is different than the browser\'s ecmascript: ' + formatName + ' - polyfill: ' + intlPolyfill + ' - chrome: ' + expectedEcmaScript402);
+=======
+			assert.equal(intlPolyfill, expectedEcmaScript402, 'polyfill is the same as the browser\'s ecmascript: ' + formatName + ' - ' + intlPolyfill);
+		} else {
+			var expectedDate = whitelistException['expected' + i];
+			assert.equal(intlPolyfill, expectedDate, '!!!KNOWN TO BE DIFFERENT!!! polyfill is the not same as the browser\'s ecmascript but it\'s okay - polyfill: ' + formatName + ' - polyfill: ' + intlPolyfill + ' - chrome: ' + expectedEcmaScript402);
+>>>>>>> d0da3a3... added chrome conformation tests to see how the polyfil performs
 		}
 	}
 };
