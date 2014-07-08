@@ -49,26 +49,6 @@
 		    document.getElementsByTagName("head")[0].appendChild(script);
 		}
 
-		var localesToTest = [
-			'ja-JP',
-			'de-DE',
-			'en-US',
-			'en-GB',
-			'es-ES',
-			'fi-FI',
-			'fr-FR',
-			'it-IT',
-			'ko-KR',
-			'nl-NL',
-			'pl-PL',
-			'pt-BR',
-			'ru-RU',
-			'sv-SE',
-			'tr-TR',
-			'zh-hans-CN',
-			'zh-hant-TW'
-		];
-
 		var locale = getQueryParams('locale');
 		document.getElementsByTagName('html')[0].attributes.lang = locale;
 
