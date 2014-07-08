@@ -7,7 +7,8 @@ var LOCALE_DATA_PATH = 'locale-data/';
 var JSON_PATH = LOCALE_DATA_PATH + 'json/';
 var JSONP_PATH = LOCALE_DATA_PATH + 'jsonp/';
 var REGEX_TIME_SECOND_PARAMETER = /[^}]+{second}/g;
-var ID_OF_SCRIPT = 'fix-data-2014-07-06';
+var SCRIPT_ID = 'fix-data-2014-07-06';
+var PATCH_ID = '[[patched]]';
 
 var fs = require('fs');
 var UglifyJS = require("uglify-js");
@@ -39,8 +40,8 @@ function fixLocale(locale) {
 
 		var localeData = JSON.parse(data);
 
-		if (localeData['[[patched]]'] === undefined) {
-			localeData['[[patched]]'] = ID_OF_SCRIPT;
+		if (localeData[PATCH_ID] === undefined) {
+			localeData[PATCH_ID] = SCRIPT_ID;
 
 			var newData = fixData(localeData);
 			saveToJson(locale, newData);
