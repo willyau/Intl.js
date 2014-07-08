@@ -27,8 +27,37 @@
                 "hour": "numeric",
                 "minute": "2-digit",
                 "second": "2-digit",
+                "pattern": "{year}年{month}月{day}日{weekday} {hour}:{minute}",
+                "pattern12": "{year}年{month}月{day}日{weekday} {ampm}{hour}:{minute}"
+            },
+            {
+                "year": "numeric",
+                "month": "short",
+                "day": "numeric",
+                "weekday": "short",
+                "hour": "numeric",
+                "minute": "2-digit",
+                "second": "2-digit",
+                "pattern": "{year}年{month}月{day}日{weekday} {hour}:{minute}",
+                "pattern12": "{year}年{month}月{day}日{weekday} {ampm}{hour}:{minute}"
+            },
+            {
+                "year": "numeric",
+                "month": "long",
+                "day": "numeric",
+                "weekday": "short",
+                "hour": "numeric",
+                "minute": "2-digit",
+                "second": "2-digit",
                 "pattern": "{year}年{month}月{day}日{weekday} {hour}:{minute}:{second}",
                 "pattern12": "{year}年{month}月{day}日{weekday} {ampm}{hour}:{minute}:{second}"
+            },
+            {
+                "year": "numeric",
+                "month": "long",
+                "day": "numeric",
+                "weekday": "short",
+                "pattern": "{year}年{month}月{day}日{weekday}"
             },
             {
                 "year": "numeric",
@@ -39,9 +68,21 @@
             },
             {
                 "year": "numeric",
+                "month": "long",
+                "day": "numeric",
+                "pattern": "{year}年{month}月{day}日"
+            },
+            {
+                "year": "numeric",
                 "month": "short",
                 "day": "numeric",
                 "pattern": "{year}年{month}月{day}日"
+            },
+            {
+                "year": "numeric",
+                "month": "2-digit",
+                "day": "2-digit",
+                "pattern": "{year}/{month}/{day}"
             },
             {
                 "year": "numeric",
@@ -58,6 +99,14 @@
                 "year": "numeric",
                 "month": "numeric",
                 "pattern": "{year}年{month}月"
+            },
+            {
+                "month": "short",
+                "day": "numeric",
+                "pattern": "{month}月{day}日 {hour}:{minute}",
+                "hour": "numeric",
+                "minute": "2-digit",
+                "pattern12": "{month}月{day}日 {ampm}{hour}:{minute}"
             },
             {
                 "month": "short",
@@ -1105,5 +1154,6 @@
             "XOF": "CFA",
             "XPF": "CFPF"
         }
-    }
+    },
+    "[[patched]]": "fix-data-2014-07-06"
 }

@@ -28,6 +28,28 @@
                 "hour": "numeric",
                 "minute": "2-digit",
                 "second": "2-digit",
+                "pattern": "{year}년 {month} {day}일 ({weekday})  {hour}:{minute}",
+                "pattern12": "{year}년 {month} {day}일 ({weekday}) {ampm} {hour}:{minute}"
+            },
+            {
+                "year": "numeric",
+                "month": "long",
+                "day": "numeric",
+                "weekday": "short",
+                "hour": "numeric",
+                "minute": "2-digit",
+                "second": "2-digit",
+                "pattern": "{year}년 {month} {day}일 ({weekday})  {hour}:{minute}",
+                "pattern12": "{year}년 {month} {day}일 ({weekday}) {ampm} {hour}:{minute}"
+            },
+            {
+                "year": "numeric",
+                "month": "short",
+                "day": "numeric",
+                "weekday": "short",
+                "hour": "numeric",
+                "minute": "2-digit",
+                "second": "2-digit",
                 "pattern": "{year}년 {month} {day}일 ({weekday})  {hour}:{minute}:{second}",
                 "pattern12": "{year}년 {month} {day}일 ({weekday}) {ampm} {hour}:{minute}:{second}"
             },
@@ -43,10 +65,23 @@
             },
             {
                 "year": "numeric",
+                "month": "long",
+                "day": "numeric",
+                "weekday": "short",
+                "pattern": "{year}년 {month} {day}일 ({weekday})"
+            },
+            {
+                "year": "numeric",
                 "month": "short",
                 "day": "numeric",
                 "weekday": "short",
                 "pattern": "{year}년 {month} {day}일 ({weekday})"
+            },
+            {
+                "year": "numeric",
+                "month": "long",
+                "day": "numeric",
+                "pattern": "{year}년 {month} {day}일"
             },
             {
                 "year": "numeric",
@@ -59,6 +94,12 @@
                 "month": "2-digit",
                 "day": "2-digit",
                 "pattern": "{year}년 {month}월 {day}일"
+            },
+            {
+                "year": "numeric",
+                "month": "2-digit",
+                "day": "2-digit",
+                "pattern": "{year}. {month}. {day}"
             },
             {
                 "year": "numeric",
@@ -75,6 +116,14 @@
                 "year": "numeric",
                 "month": "short",
                 "pattern": "{year}년 {month}"
+            },
+            {
+                "month": "short",
+                "day": "numeric",
+                "pattern": "{month} {day}일 {hour}:{minute}",
+                "hour": "numeric",
+                "minute": "2-digit",
+                "pattern12": "{month} {day}일 {ampm} {hour}:{minute}"
             },
             {
                 "month": "short",
@@ -1044,5 +1093,6 @@
             "XOF": "CFA",
             "XPF": "CFPF"
         }
-    }
+    },
+    "[[patched]]": "fix-data-2014-07-06"
 }
