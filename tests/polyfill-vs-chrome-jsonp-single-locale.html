@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
-<link rel="stylesheet" href="../tests/vendor/qunit/css/qunit-1.14.0.css">
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="../tests/vendor/qunit/css/qunit-1.14.0.css">
 
-<script src="../Intl.js"></script>
+	<script src="../Intl.js"></script>
 </head>
 
 <body>
@@ -21,10 +21,8 @@
 		        re = /[?&]?([^=]+)=([^&]*)/g;
 
 		    while (tokens = re.exec(qs)) {
-		        params[decodeURIComponent(tokens[1])]
-		            = decodeURIComponent(tokens[2]);
+		        params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
 		    }
-
 		    return params[name];
 		}
 
