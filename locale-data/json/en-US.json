@@ -27,8 +27,37 @@
                 "hour": "numeric",
                 "minute": "2-digit",
                 "second": "2-digit",
+                "pattern": "{weekday}, {month} {day}, {year} {hour}:{minute}",
+                "pattern12": "{weekday}, {month} {day}, {year} {hour}:{minute} {ampm}"
+            },
+            {
+                "weekday": "short",
+                "month": "long",
+                "day": "numeric",
+                "year": "numeric",
+                "hour": "numeric",
+                "minute": "2-digit",
+                "second": "2-digit",
+                "pattern": "{weekday}, {month} {day}, {year} {hour}:{minute}",
+                "pattern12": "{weekday}, {month} {day}, {year} {hour}:{minute} {ampm}"
+            },
+            {
+                "weekday": "short",
+                "month": "short",
+                "day": "numeric",
+                "year": "numeric",
+                "hour": "numeric",
+                "minute": "2-digit",
+                "second": "2-digit",
                 "pattern": "{weekday}, {month} {day}, {year} {hour}:{minute}:{second}",
                 "pattern12": "{weekday}, {month} {day}, {year} {hour}:{minute}:{second} {ampm}"
+            },
+            {
+                "weekday": "short",
+                "month": "long",
+                "day": "numeric",
+                "year": "numeric",
+                "pattern": "{weekday}, {month} {day}, {year}"
             },
             {
                 "weekday": "short",
@@ -38,10 +67,22 @@
                 "pattern": "{weekday}, {month} {day}, {year}"
             },
             {
+                "month": "long",
+                "day": "numeric",
+                "year": "numeric",
+                "pattern": "{month} {day}, {year}"
+            },
+            {
                 "month": "short",
                 "day": "numeric",
                 "year": "numeric",
                 "pattern": "{month} {day}, {year}"
+            },
+            {
+                "month": "2-digit",
+                "day": "2-digit",
+                "year": "numeric",
+                "pattern": "{month}/{day}/{year}"
             },
             {
                 "month": "numeric",
@@ -58,6 +99,14 @@
                 "month": "short",
                 "year": "numeric",
                 "pattern": "{month} {year}"
+            },
+            {
+                "month": "short",
+                "day": "numeric",
+                "pattern": "{month} {day} {hour}:{minute}",
+                "hour": "numeric",
+                "minute": "2-digit",
+                "pattern12": "{month} {day} {hour}:{minute} {ampm}"
             },
             {
                 "month": "short",
@@ -935,5 +984,6 @@
             "XOF": "CFA",
             "XPF": "CFPF"
         }
-    }
+    },
+    "[[patched]]": "fix-data-2014-07-06"
 }
