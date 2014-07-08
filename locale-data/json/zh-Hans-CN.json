@@ -21,7 +21,7 @@
         "formats": [
             {
                 "year": "numeric",
-                "month": "numeric",
+                "month": "short",
                 "day": "numeric",
                 "weekday": "short",
                 "hour": "numeric",
@@ -32,16 +32,16 @@
             },
             {
                 "year": "numeric",
-                "month": "numeric",
+                "month": "short",
                 "day": "numeric",
                 "weekday": "short",
                 "pattern": "{year}年{month}月{day}日{weekday}"
             },
             {
                 "year": "numeric",
-                "month": "numeric",
+                "month": "short",
                 "day": "numeric",
-                "pattern": "{year}年{month}月{day}"
+                "pattern": "{year}年{month}月{day}日"
             },
             {
                 "year": "numeric",
@@ -57,12 +57,12 @@
             {
                 "year": "numeric",
                 "month": "numeric",
-                "pattern": "{year}年{month}"
+                "pattern": "{year}年{month}月"
             },
             {
-                "month": "numeric",
+                "month": "short",
                 "day": "numeric",
-                "pattern": "{month}月{day}"
+                "pattern": "{month}月{day}日"
             },
             {
                 "month": "numeric",
@@ -295,32 +295,32 @@
                         "12"
                     ],
                     "short": [
-                        "1月",
-                        "2月",
-                        "3月",
-                        "4月",
-                        "5月",
-                        "6月",
-                        "7月",
-                        "8月",
-                        "9月",
-                        "10月",
-                        "11月",
-                        "12月"
+                        "1",
+                        "2",
+                        "3",
+                        "4",
+                        "5",
+                        "6",
+                        "7",
+                        "8",
+                        "9",
+                        "10",
+                        "11",
+                        "12"
                     ],
                     "long": [
-                        "一月",
-                        "二月",
-                        "三月",
-                        "四月",
-                        "五月",
-                        "六月",
-                        "七月",
-                        "八月",
-                        "九月",
-                        "十月",
-                        "十一月",
-                        "十二月"
+                        "1",
+                        "2",
+                        "3",
+                        "4",
+                        "5",
+                        "6",
+                        "7",
+                        "8",
+                        "9",
+                        "10",
+                        "11",
+                        "12"
                     ]
                 },
                 "days": {

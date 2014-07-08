@@ -27,15 +27,15 @@
                 "hour": "numeric",
                 "minute": "2-digit",
                 "second": "2-digit",
-                "pattern": "{weekday}, {day} de {month} de {year} {hour}:{minute}:{second}",
-                "pattern12": "{weekday}, {day} de {month} de {year} {hour}:{minute}:{second} {ampm}"
+                "pattern": "{weekday} {day} de {month} de {year} {hour}:{minute}:{second}",
+                "pattern12": "{weekday} {day} de {month} de {year} {hour}:{minute}:{second} {ampm}"
             },
             {
                 "weekday": "short",
                 "day": "numeric",
                 "month": "long",
                 "year": "numeric",
-                "pattern": "{weekday}, {day} de {month} de {year}"
+                "pattern": "{weekday} {day} de {month} de {year}"
             },
             {
                 "day": "numeric",
@@ -207,18 +207,18 @@
                         "D"
                     ],
                     "short": [
-                        "ene.",
-                        "feb.",
-                        "mar.",
-                        "abr.",
-                        "may.",
-                        "jun.",
-                        "jul.",
-                        "ago.",
-                        "sept.",
-                        "oct.",
-                        "nov.",
-                        "dic."
+                        "ene",
+                        "feb",
+                        "mar",
+                        "abr",
+                        "may",
+                        "jun",
+                        "jul",
+                        "ago",
+                        "sept",
+                        "oct",
+                        "nov",
+                        "dic"
                     ],
                     "long": [
                         "enero",
@@ -246,13 +246,13 @@
                         "SA"
                     ],
                     "short": [
-                        "dom.",
-                        "lun.",
-                        "mar.",
-                        "mié.",
-                        "jue.",
-                        "vie.",
-                        "sáb."
+                        "dom",
+                        "lun",
+                        "mar",
+                        "mié",
+                        "jue",
+                        "vie",
+                        "sáb"
                     ],
                     "long": [
                         "domingo",
