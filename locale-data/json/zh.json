@@ -41,7 +41,7 @@
                 "year": "numeric",
                 "month": "numeric",
                 "day": "numeric",
-                "pattern": "{year}年{month}月{day}"
+                "pattern": "{year}年{month}月{day}日"
             },
             {
                 "year": "numeric",
@@ -57,12 +57,12 @@
             {
                 "year": "numeric",
                 "month": "numeric",
-                "pattern": "{year}年{month}"
+                "pattern": "{year}年{month}月"
             },
             {
                 "month": "numeric",
                 "day": "numeric",
-                "pattern": "{month}月{day}"
+                "pattern": "{month}月{day}日"
             },
             {
                 "month": "numeric",
