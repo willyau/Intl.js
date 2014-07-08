@@ -2,11 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<<<<<<< HEAD
-<link rel="stylesheet" href="../tests/css/qunit-1.14.0.css">
-=======
 <link rel="stylesheet" href="../tests/vendor/qunit/css/qunit-1.14.0.css">
->>>>>>> d0da3a3... added chrome conformation tests to see how the polyfil performs
 
 <script src="../Intl.js"></script>
 </head>
@@ -14,11 +10,7 @@
 <body>
 	<div id="qunit"></div>
   	<div id="qunit-fixture"></div>
-<<<<<<< HEAD
-  	<script src="../tests/js/qunit-1.14.0.js"></script>
-=======
   	<script src="../tests/vendor/qunit/js/qunit-1.14.0.js"></script>
->>>>>>> d0da3a3... added chrome conformation tests to see how the polyfil performs
 
   	<script type="text/javascript">
 	  	function getQueryParams(name) {
@@ -83,11 +75,7 @@
 		document.getElementsByTagName('html')[0].attributes.lang = locale;
 
 		loadScript('../locale-data/jsonp/' + locale + '.js', function() {
-<<<<<<< HEAD
-			loadScript('polyfill-vs-browser.js', function() {});
-=======
 			loadScript('polyfill-vs-chrome.js', function() {});
->>>>>>> d0da3a3... added chrome conformation tests to see how the polyfil performs
 		});
 
   	</script>
