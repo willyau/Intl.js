@@ -38,7 +38,7 @@
                 "pattern": "{day} {month} {year} {weekday}"
             },
             {
-                "day": "2-digit",
+                "day": "numeric",
                 "month": "short",
                 "year": "numeric",
                 "pattern": "{day} {month} {year}"
